@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mvvmproject/core/res/components/roundbutton.dart';
 import 'package:mvvmproject/core/utils/routes/routes.dart';
 import 'package:mvvmproject/core/utils/routes/routes_name.dart';
 import 'package:mvvmproject/core/utils/utils.dart';
@@ -15,9 +16,20 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
   ValueNotifier<bool> isobscure = ValueNotifier<bool>(false);
   FocusNode emailfocus = FocusNode();
-  FocusNode passFocus = FocusNode();
+  FocusNode passFocus = FocusNode();@override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+
+    emailfocus.dispose();
+    passFocus.dispose();
+    isobscure.dispose();
+  }
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: Text('loginScreen'),
@@ -82,7 +94,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 );
               }
           ),
-
+          SizedBox(height: height *.1,),
+          Roundbutton(title: 'Login', onpress: () {
+            if(emailController.text.isEmpty){
+              Utils.FlashbarError('please enter email', context);
+            }else if(passwordController.text.isEmpty){
+              Utils.FlashbarError('please enter password', context);
+            }else if(passwordController.text.length<6){
+              Utils.FlashbarError('password weak', context);
+            }else{
+              print('api hit');
+            }
+          },),
         ],
       ),
     );
